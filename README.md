@@ -39,17 +39,13 @@ Once this foundation is solid, I’ll transition into:
 
 ---
 
-```bash
-js-foundations/
-├── 01_basics/          # primitives, types, date, math
-├── 02_arrays/          # methods, mutation, iteration
-├── 03_objects/         # keys, values, methods, cloning
-├── 04_functions/       # declarations, expressions, scope, 'this'
-├── 05_control-flow/    # decisions, loops, logic
-├── 06_async/           # timers, promises, async/await
+### 🗂️ Structure/js-foundations/
+├── 01_basics -> variables, string, nums_and_maths, date, datatypes, conversion
+├── 02_basics -> array
+├── 
 ├── …
 └── README.md
-```
+
 ---
 
 ### 🔒 Commit Log = My Learning Log
@@ -57,5 +53,3 @@ js-foundations/
 Each commit reflects a completed learning rep, experiment, or correction.
 
 ---
-
-**No fluff. No shortcuts. Pure fundamentals.**

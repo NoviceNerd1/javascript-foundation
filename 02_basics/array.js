@@ -51,3 +51,12 @@ console.log(myn2)
 
 // SPLICE -> doesnt copy the elements from the given range but it extracts the elemtns from the main array
 
+
+// array - object with numeric keys + a length property
+
+const a= []
+const b= new Array()
+a[100]= "boom"
+b[100]="boom"
+console.log(a.length)
+console.log(b.length)
