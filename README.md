@@ -39,4 +39,19 @@ Once this foundation is solid, I’ll transition into:
 
 ---
 
-### 🗂️ Structure
+### 🗂️ Structure/js-foundations/
+├── 01_basics -> variables, string, nums_and_maths, date, datatypes, conversion
+├── 02_basics -> array
+├── 
+├── …
+└── README.md
+
+---
+
+### 🔒 Commit Log = My Learning Log
+
+Each commit reflects a completed learning rep, experiment, or correction.
+
+---
+
+**No fluff. No shortcuts. Pure fundamentals.**
