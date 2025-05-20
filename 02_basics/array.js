@@ -131,13 +131,14 @@ let dc_heros = ["superman", "flash", "Batman"];
 // const keys = [...arr1.keys()];
 // const keys = [...arr1.values()];
 
-const nums1 = [1, 2, 3, 4, 5, 6];
-const sliced = nums1.slice(1, 4);
-console.log(sliced);
+//const nums1 = [1, 2, 3, 4, 5, 6];
+//const sliced = nums1.slice(1, 4);
+//console.log(sliced);
 
-console.log(nums1);
-nums1.splice(2, 2, "a", "b");
-console.log(nums1);
+//console.log(nums1);
+//nums1.splice(2, 2, "a", "b");
+//console.log(nums1);
 
-console.log(nums1.some((x) => x > 2));
-console.log(nums1.every((x) => x > 0));
+//console.log(nums1.some((x) => x > 2));
+//console.log(nums1.every((x) => x > 0));
+
