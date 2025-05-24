@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<title>Clock</title>
+		<style>
+			body{
+				background-color: #212121;
+				color:#fff;
+				font-family: sans-serif;
+				display:flex;
+				flex-direction:column;
+				align-items: center;
+				justify-content: center;
+				height: 100vh;
+				margin:0;
+			}
+			h1{
+				margin-bottom:1rem;
+			}
+			.section{
+				margin:20px 0;
+				text-align:center;
+			}
+
+			.display{
+				font-size:2rem;
+				background: orange;
+				padding:15px 30px;
+				border-radius:10px;
+				margin-bottom:10px;
+			}
+
+			button{
+				margin:5px;
+				padding: 10px 15px;
+				border:none;
+				border-radius:5px;
+				cursor:pointer;
+			}
+
+			input[type="number"]{
+				width:60px;
+				padding:5px;
+				margin: 0 5px;
+				border-radius: 5px;
+				border:none;
+			}
+
+
+		</style>
+	</head>
+	<body>
+		<div class="section">
+			<h1>Clock</h1>
+			<div class="display" id="clock">--:--:--</div>
+		</div>
+
+		<div class="section">
+			<h1>Timer</h1>
+			<input type="number" id="timer-minutes" placeholder="min"/>:
+			<input type="number" id="timer-seconds" placeholder="sec"/>
+			<br>
+			<button onclick="startTimer()">Start</button>
+			<button onclick="resetTimer()">Reset</button>
+			<div class="display" id="timer-display">00:00</div>
+		</div>
+
+		<div class="section">
+			<h1>Stopwatch</h1>
+			<button onclick="startStopwatch()">Start</button>
+			<button onclick="stopStopwatch()">Pause</button>
+			<button onclick="resetStopwatch()">Reset</button>
+			<div class="display" id="stopwatch-display">00:00:00</div>
+		</div>
+		<script src="newClock.js"></script>
+	</body>
+</html>
