@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<title>Events</title>
+		<style></style>
+	</head>
+	<body>
+		<h1>More of Events</h1>
+		<button id="stop">STOP</button>	
+		<button id="start">START</button>
+	</body>
+	<script>
+		const sayName= function(){
+			console.log("Hi Rishi")
+		}
+		//setTimeout(sayName, 2000)
+		//setInterval(sayName, 1000)
+
+		document.querySelector('#stop').addEventListener('click',function(e){
+			clearTimeout(changeHead);
+			clearInterval(intervalStart)
+			console.log('timeout and interval stopped')
+		},false)
+
+		document.querySelector('#start').addEventListener('click',function(e){
+			setInterval(()=>{
+				console.log("I am Rishi, interval!")
+			},2000)
+		},false)
+		
+		const intervalStart= setInterval(()=>{
+				console.log("I am Rishi, interval!")
+			},1000)
+
+	const changeHead= setTimeout(()=>{
+			document.querySelector('h1').innerHTML = "I am getting better in JS"
+		},2000)
+
+	// clearTimeout(reference) - stops timeout function or clears it, but it needs reference , which timeout to stop
+//	clearTimeout(changeHead);
+	</script>
+</html>

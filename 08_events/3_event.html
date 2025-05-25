@@ -12,30 +12,22 @@
 		<button id="start">START</button>
 	</body>
 	<script>
+		//setInterval(function printName(){
+		//	console.log("Rishi",Date.now());
+		//},1000)
+
 		let intervalId;
 		
-	// start
+		const sayNameDate = function(){
+			console.log("HI ",new Date(Date.now()).toLocaleTimeString())
+		}
 
 		document.getElementById('start').addEventListener('click',function(){
-		
-			const randomColor= function(){
-				const hex = '0123456789ABCDEF';
-				let color= '#'
-				for(let i=0; i<6;i++){
-					color+= hex[Math.floor(Math.random()*16)];
-				}
-				document.body.style.backgroundColor= color;
-			}
-
-	if(!intervalId){
-			intervalId= setInterval(randomColor,500)
+			if(!intervalId){
+			intervalId= setInterval(sayNameDate,1000)
 				;}
 		}, false
  )
-
-
-	// STOP
-
 		document.getElementById('stop').addEventListener('click',function(){
 			clearInterval(intervalId)
 			intervalId=null;
@@ -43,5 +35,3 @@
 
 	</script>
 </html>
-
-

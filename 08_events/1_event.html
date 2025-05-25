@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Simple Image Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f5f5f5;
+      padding: 20px;
+    }
+
+    img {
+      width: 300px;
+      height: auto;
+      margin: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>My Image Gallery</h1>
+  <div>
+	<ul id="images">
+		<li><img src="https://images.unsplash.com/photo-1508921912186-1d1a45ebb3c1?w=600" id="Mountain"></li>
+		<li><img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=600" id="Person"></li>
+		<li><img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=600" id="Running"> </li>
+  
+		<li><button><a id="google" href="https://www.google.com/" target="_blank">Google</button> </li>
+  </ul>
+  </div>
+</body>
+<script>
+	// onclick in tag , is not good practice in JS 
+	// it affects scalability
+	//document.getElementById('Running').onclick = function()	//{
+	//	alert("GYMMMMM!!!");
+	//}
+	// while this is good but its old and
+	//offers less features for manipulations
+
+
+	// attachEvent - used in old times , in IE
+	// jQuery - on - for events
+	
+	// Topics to STUDY =>
+	// types, timestamp, defaultPrevented
+	// target , toElement, srcElement, currentTarget
+	// clientX, ClientY, screenX, screenY
+	// altkey, ctrlkey, shiftkey, keycode
+
+	// e- event object (study)
+	//document.getElementById('Running').addEventListener('click',function(e){
+	//	console.log(e);
+	//	console.log(`${e.timeStamp/3600}`);
+	//	console.log(`X: ${e.clientX} Y: ${e.clientY}`);
+	//}, false);
+	
+//	document.getElementById('images').addEventListener('click',function(){
+//		//console.log("clicked in ul")
+//	}, false)
+
+//	document.getElementById('Person').addEventListener('click',function(e){
+//		e.stopPropagation();
+	//	console.log("PERSONNN!!! ")
+//	}, false)
+	// event listener(action, function, { propagaton mode(bubble default(false), or caputring (true))} )
+	// when true, it goes inside in tree format, the outer then inner, opposite in Bubble mode	
+//	document.getElementById('google').addEventListener('click',(e)=>{
+//		e.preventDefault();
+//		//console.log('google clicked!!')
+//	},false);
+//	
+	document.querySelector("#images").addEventListener('click', function(e){
+		console.log(e.target.tagName)
+		if(e.target.tagName ==='IMG'){
+			console.log(e.target.id)
+			let removeIt = e.target.parentNode
+			removeIt.remove();
+		}
+		//console.log(e.target.parentNode)
+//		let removeIt = e.target.parentNode;
+
+//
+//		console.log(removeIt)
+//		//console.log(removeIt.parentNode.parentNode)
+		//removeIt.remove()
+		//removeIt.parentNode.removeChild(removeIt)
+//		removeIt.remove()
+
+
+	},false)
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+</html>
