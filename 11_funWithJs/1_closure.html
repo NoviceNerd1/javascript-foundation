@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Lexical Scoping</title>
+	</head>
+	<body style="background-color:#414141; color:white;">
+		<h1>JS Closure - Lexical Scoping</h1>
+		<button id='orange'>Orange</button>
+		<button id="green">Green</button>
+	</body>
+	<script>
+	
+//	document.getElementById('orange').onclick= function(){
+//		//document.querySelector('body').style.backgroundColor='orange';
+//		document.body.style.backgroundColor='orange'
+//	}
+//
+//	document.getElementById('green').onclick= function(){
+//		//document.querySelector('body').style.backgroundColor='green';
+//		document.body.style.backgroundColor="green";
+//	}
+
+	function clickHandler(color){
+		//document.body.style.backgroundColor =`${color}`;
+	// line above directly changes the background color, without click
+		return function(){
+			document.body.style.backgroundColor = `${color}`
+		}
+	}
+
+	document.getElementById('orange').onclick = clickHandler('orange')
+
+	document.getElementById('green').onclick = clickHandler('green')
+
+
+
+
+
+
+
+
+
+
+
+	//	function init(){
+	//		let name="Rishi"
+	//		function displayName(){
+	//			console.log(name);
+	//		}
+	//		displayName();
+	//	}
+	//	//init();
+	//	//init.displayName()
+	//	console.log()
+	
+	//	function outer(){
+	//	let username = "Rishi"
+	//	function inner(){
+	//		let secret = "123"
+	//		console.log("Inner: ",username);
+	//	}
+	//	function inner2(){
+	//		console.log("Inner 2: ",username)
+	//		console.log(secret)
+	//	}
+	//	inner();
+	//	inner2();
+	//}
+	//outer()
+	//console.log("Too Outer: ",username)
+
+	//
+	//	function makeFunc(){
+	//		const name="Rishi AGAIN";
+	//		function displayName(){
+	//			console.log(name);
+	//		}
+	//		return displayName;
+	//	}
+	//	
+
+	//const myFunc = makeFunc();
+	//myFunc()
+	//console.log(makeFunc().name)
+	</script>
+</html>
