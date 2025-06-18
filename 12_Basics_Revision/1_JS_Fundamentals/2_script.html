@@ -1,0 +1,41 @@
+<!doctype HTML>
+<html>
+	<head>
+		<title>Script</title>
+		<style>
+			.done{
+				color: darkseagreen;
+				text-decoration:line-through solid black 4px;
+			}
+		</style>
+	</head>
+	<body>
+	
+			<ul>
+				<li>Eat</li>
+				<li>Sleep</li>
+				<li>Repeat</li>
+			</ul>
+	
+		<script>
+			document.addEventListener("DOMContentLoaded",()=>{
+				const listItem = document.querySelectorAll("li");
+
+				listItem.forEach((item)=>{
+					item.addEventListener("click",toggleDone)
+				})
+				
+
+				function toggleDone(e){
+					if(!e.target.className){
+						e.target.className = "done";
+					}else{
+						e.target.className="";
+					}
+				}
+
+			});
+	</script>
+
+	</body>
+</html>

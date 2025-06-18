@@ -1,0 +1,73 @@
+Here’s a succinct, technical summary of that content, trimmed of fluff and aligned with engineering discipline:
+
+⸻
+
+🔹 Core Concepts Recap: “Hello, World!” in JavaScript
+
+✅ Purpose:
+	•	This section focuses purely on core JavaScript (the language), not on browser-specific APIs.
+	•	Browser is used as the execution environment for convenience, but principles apply equally to Node.js and other runtimes.
+
+⸻
+
+🔹 Script Execution in HTML
+
+🔸 Basic Inline Script:
+
+<script>
+  alert('Hello, world!');
+</script>
+
+	•	Code inside <script> runs when the browser parses that tag.
+	•	Positioning matters: scripts can affect rendering depending on where they are in the DOM.
+
+🔸 Legacy Attributes (now obsolete):
+	•	type="text/javascript" → No longer required; JS is default.
+	•	language="javascript" → Obsolete since the early 2000s.
+	•	<!-- ... //--> → Ancient browser hack to hide JS from non-JS browsers. If you see this in code, it belongs in a museum.
+
+⸻
+
+🔹 External Scripts
+
+✅ Usage:
+
+<script src="/path/to/script.js"></script>
+
+	•	Absolute or relative paths allowed.
+	•	Can load from CDNs (e.g., lodash via cdnjs).
+	•	Prefer external scripts for:
+	•	Reuse
+	•	Caching
+	•	Cleaner HTML
+	•	Separation of concerns
+
+⚠️ Rule:
+
+Don’t mix src and inline code inside the same <script> tag. If src is present, the inner code is ignored.
+
+✅ Correct:
+
+<script src="file.js"></script>
+<script>
+  alert(1);
+</script>
+
+
+⸻
+
+🔹 Performance Note:
+	•	External scripts can be cached by browsers, reducing redundant network usage and speeding up load time across pages.
+
+⸻
+
+🔹 TL;DR for Engineers
+
+Feature	Recommendation
+<script> position	Place where needed in flow
+type, language	Obsolete—don’t use
+Mixing inline + src	Invalid — use separate tags
+Use of <script>	Inline for trivial, external for real code
+Browser-specific JS	Avoid for now — not focus of core JS
+
+
