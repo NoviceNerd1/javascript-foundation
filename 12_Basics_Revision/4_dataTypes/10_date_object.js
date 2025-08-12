@@ -411,14 +411,477 @@ console.log('Invalid Date:',isValidDate(badDate));
 
 
 
+// ----------------------------
+// Additional creation methods
+
+// Using Date.UTC() - creates timestamps for UTC time
+
+const utcDate = new Date(Date.UTC(2023, 6,4,15,30));
+console.log('UTC Date: ', utcDate.toISOString());
+console.log('UTC Date: ', utcDate);  // prints same
+
+
+// from unix timestamps (seconds)
+
+const unixTimeStamp = 1689987600; // seconds since epoch
+const dateFromUnix = new Date(unixTimeStamp * 1000);
+console.log('Date from unix timestamp: ', dateFromUnix);
+
+
+// -----------------------------
+// High-resolution Time
+
+
+// performance.now() - microsecond precision, not affected by system clock changes
+let num =1;
+const perfStart = performance.now();
+// Do some work ...
+for(let i=0;i<1000000;i++) num+=1;
+const perfEnd = performance.now();
+console.log(`Operation took ${(perfEnd - perfStart).toFixed(3)}ms`);
+
+console.log('hrTime:', process.hrtime()); //- in node.js for nanosecond precision
+// (not available in browser)
+
+
+// -------------------------
+// Internatinalizatin (INTL)
+
+// advanced formatting with Intl.DateTimeFormat
+const formatter = new Intl.DateTimeFormat('de-DE',{
+	weekday:'long',
+	year: 'numeric',
+	month: 'long',
+	day: 'numeric',
+	hour: '2-digit',
+	minute: '2-digit',
+	timeZone: 'Europe/Berlin'
+});
+
+console.log('German Format:',formatter.format(new Date()));
+
+// List of supported time zones
+//console.log('Available timezones:',Intl.supportedValuesOf('timeZone'));
+
+
+// -------------------------
+// Date ranges and validation
+
+// JS date range limitations
+const minDate = new Date(-8640000000000000); // Earliest valid date
+const maxDate = new Date(8640000000000000); // lastest valid date
+
+console.log(`
+Earliest Date: ${minDate}
+Latest date: ${maxDate}
+`)
+
+
+// Checking for invalid dates
+/*function isValidDate(d) {
+  return d instanceof Date && !isNaN(d) && 
+         d.getTime() > minDate.getTime() && 
+         d.getTime() < maxDate.getTime();
+}
+*/
+// ---------------------------
+// Daylight savings time (DST) handling
+
+// deteting DST changes
+function isDST(date = new Date()){
+	const jan = new Date(date.getFullYear(), 0, 1);
+	const jul = new Date(date.getFullYear(), 6, 1);
+	const stdOffSet= Math.max(jan.getTimezoneOffset(), jul.getTimezoneOffset());
+	return date.getTimezoneOffset() < stdOffSet;
+}
+
+console.log('Is DST in effect now?',isDST());
 
 
 
+// --------------------------
+// Additional date calculations
+
+// calculate week number (ISO 8601)
+function getWeekNumber(date){
+	const d= new Date(date);
+	d.setHours(0,0,0,0);
+	d.setDate(d.getDate() + 3 - (d.getDay()+6)%7);
+	const week1 = new Date(d.getFullYear(), 0,4);
+
+	return 1 + Math.round(((d - week1) / 86400000 - 3 + (week1.getDay() + 6) % 7) / 7);
+}
+
+
+console.log('Current week number:', getWeekNumber(new Date()));
+
+
+// calculate age in years
+
+function calculateAge(birthDate){
+	const now = new Date();
+	let age = now.getFullYear() - birthDate.getFullYear();
+	const monthDiff = now.getMonth() - birthDate.getMonth();
+	if(monthDiff < 0 || (monthDiff ===0 && now.getDate() < birthDate.getDate())){
+		age--;
+	}
+
+	return age;
+}
+
+console.log('My age:',calculateAge(new Date(2002,06,15)))
+
+
+// --------------------------
+// Timezone conversion best practices
+
+// always work in UTC for server side operations
+const serverTime = new Date().toISOString();
+console.log('Server Time (UTC):',serverTime);
+
+
+// convert to local time only for display
+const localTime = new Date(serverTime).toLocaleString();
+console.log('Local time:',localTime);
+
+// Using libraries for complex timezone handling (recommended)
+// moment-timezone, date-fns-tz, Luxon, etc.
 
 
 
+// ============= 11. RECOMMENDED LIBRARIES =============
+
+// For complex date operations, consider:
+// - Luxon (modern, Intl-based)
+// - date-fns (modular)
+// - Day.js (lightweight)
+// - Moment.js (legacy, not recommended for new projects)
+
+// ============= 12. TEMPORAL API (FUTURE) =============
+
+// Coming soon - Temporal is a new date/time API proposal
+// Currently in Stage 3 of TC39 process
+// Will provide better date/time handling when implemented
+
+// Example (when available):
+// const date = Temporal.PlainDate.from('2023-07-20');
+// console.log(date.day); // 20
+
+
+/* 
+Key Additional Concepts Covered:
+
+1	UTC vs Local Time:
+	◦	Date.UTC() vs regular constructor
+	◦	Importance of timezone awareness
+2	High-Resolution Timing:
+	◦	performance.now() for microsecond precision
+	◦	Node.js process.hrtime()
+3	Internationalization:
+	◦	Intl.DateTimeFormat for locale-aware formatting
+	◦	Timezone database access
+4	Edge Cases:
+	◦	Date range limitations (±100,000,000 days from epoch)
+	◦	DST transition handling
+	◦	Invalid date detection
+5	Advanced Calculations:
+	◦	ISO week numbers
+	◦	Accurate age calculation
+	◦	Business day calculations (not shown but important)
+6	Performance Patterns:
+	◦	Immutability benefits
+	◦	Caching strategies
+	◦	Parsing performance
+7	Common Pitfalls:
+	◦	Month 0-indexing
+	◦	DST gaps/overlaps
+	◦	Timezone mismatches
+	◦	Browser parsing inconsistencies
+8	Library Recommendations:
+	◦	When to use libraries vs native Date
+	◦	Modern alternatives to Moment.js
+9	Future Temporal API:
+	◦	Upcoming improvements to date handling
+	◦	Better immutability and timezone support
+10	Best Practices:
+	◦	Always store and transmit in UTC
+	◦	Only convert to local time for display
+	◦	Validate all date inputs
+	◦	Be explicit about timezone handling
+
+Critical Considerations for Production Code:
+1	Timezones are Hard:
+	◦	Always store and process dates in UTC
+	◦	Only convert to local time for display
+	◦	Be aware of DST transitions
+2	Parsing is Inconsistent:
+	◦	Avoid parsing date strings without explicit format
+	◦	Prefer YYYY-MM-DD format (ISO 8601)
+	◦	Consider using a library for complex parsing
+3	Date Math is Tricky:
+	◦	Adding days != adding 24 hours (due to DST)
+	◦	Month boundaries need special handling
+	◦	Leap years affect February calculations
+4	Client vs Server Differences:
+	◦	Client dates use browser's timezone
+	◦	Server dates typically use UTC
+	◦	Sync issues can cause subtle bugs
+5	Immutable Patterns:
+	◦	Avoid modifying dates directly
+	◦	Create new instances for each change
+	◦	Prevents accidental shared state
+*/
+
+
+// E-COMMERCE : Order delivery Estimation
+/*
+ Calculates estimated delivery date considering:
+ 	- Processing time (2 business days)
+	- Shipping time (3-5 business days)
+	- Weekends/holidays excluded
+ */
+
+function getDeliveryDate(orderDate) {
+	const processingDays = 2;
+	const minShippingDays = 3, maxShippingDays = 5;
+
+	// Start with processing time
+	let deliveryDate = addBusinessDays(orderDate, processingDays);
+
+	// Add random shipping days (3-5)
+	const shippingDays = minShippingDays + Math.floor(Math.random() * (maxShippingDays - minShippingDays +1));
+	deliveryDate = addBusinessDays(deliveryDate, shippingDays);
+	return deliveryDate;
+}
+
+function addBusinessDays(startDate, daysToAdd) {
+	const result = new Date(startDate);
+	let addedDays = 0;
+	while(addedDays < daysToAdd){
+		result.setDate(result.getDate() +1);
+		// skip weekends (0=Sun 6=Sat)
+		if(result.getDay() !==0 && result.getDay() !==6){
+			addedDays++;
+		}
+	}
+	return result;
+}
+
+
+// Usage 
+const orderDate = new Date(2023, 11, 15);  // Dec 15, 2024 (Friday)
+console.log("Estimated Delivery: ", getDeliveryDate(orderDate));
+
+
+// FINANCE: Loan payment calculated
+/*
+ Generates payment schedule for a loan
+ 	@param {Date} startDate - First payment date
+	@param {number} termMonths - Loan duration in months
+	@param {number} principal - Loan amount
+	@param {number} annualRate - Annual interest rate (e.g., 5.5)
+*/
+
+function generatePaymentSchedule(startDate, termMonths, principal, annualRate) {
+	const monthlyRate = annualRate / 100/ 12;
+	const payment = principal* 
+	(monthlyRate * Math.pow(1+ monthlyRate, termMonths))/ 
+	(Math.pow(1+ monthlyRate, termMonths)-1);
+
+	const schedule = [];
+	let balance = principal;
+	let currentDate = new Date(startDate);
+
+	for(let i=1; i<=termMonths; i++) {
+		const interest = balance * monthlyRate;
+		const principalPayment = payment - interest;
+
+		schedule.push({
+			paymentDate: new Date(currentDate),
+			payment: payment.toFixed(2),
+			principal: principalPayment.toFixed(2),
+			interest: interest.toFixed(2),
+			balance: (balance - principalPayment).toFixed(2)
+		});
+
+		balance -= principalPayment;
+		currentDate.setMonth(currentDate.getMonth() +1); // auto-handles year rollover
+
+	}
+
+	return schedule;
+}
+
+
+// Usage
+const schedule = generatePaymentSchedule(
+	new Date(2023, 5,1),  // June 1, 2023
+	12,			// 1 year term
+	10000,			// $10,000 loan
+	7.5			// 7.5% interest
+);
+
+console.table(schedule.slice(0,12)); // show first 3 payments
 
 
 
+// Healthcare: Medication Reminder System
+
+/*
+ * Calculates next medication doses based on:
+ * 	- First dose time
+ * 	- Frequency (hours between doses)
+ * 	- Operating hours (8AM - 10PM)
+ * */
+
+function getNextDoses(firstDoseTime, frequencyHours, daysToShow) {
+	const doses= [];
+	const cutoffStart = 8, cutoffEnd = 22; // 8AM - 10PM
+
+	let currentDose = new Date(firstDoseTime);
+
+	while(doses.length < daysToShow * 24 / frequencyHours ){
+		const doseHour = currentDose.getHours();
+
+		// Only includes doses during operating hours
+		if(doseHour >= cutoffStart && doseHour < cutoffEnd) {
+			doses.push(new Date(currentDose));
+		}
+
+		// Add frequency hours (handles DST changes)
+		currentDose.setTime(currentDose.getTime() + frequencyHours * 3600 * 1000);
+	}
+
+	return doses;
+}
+
+// Usage
+const firstDose = new Date();
+firstDose.setHours(9,0,0,0);
+
+const nextDoses = getNextDoses(firstDose, 8,3); // Every 8 hours for 3 days
+console.log("Upcoming Doses:");
+nextDoses.forEach(dose=>{
+	console.log(dose.toLocaleString([],{
+		weekday:'short',
+		hour: '2-digit',
+		minute: '2-digit'
+	}));
+});
 
 
+
+// 4) Analytics: User session Tracking
+/*
+ * Tracks session duration with:
+ * 	- Session start/end timestamps
+ * 	- Timezone conversion for reporting
+ * 	- Inactivity timeout (30 minutes)
+ * */
+
+class SessionTracker {
+	constructor() {
+		this.sessions = [];
+		this.INACTIVITY_TIMEOUT = 30 * 60 * 1000; //30min
+	}
+
+	startSession(userId) {
+		this.sessions[userId]={
+			start: new Date(),
+			lastActivity: Date.now()
+		};
+	}
+
+	updateActivity(userId) {
+		if(this.sessions[useId]){
+			this.sessions[userId].lastActivity = Date.now();
+		}
+	}
+
+	endSession(userId) {
+		if(!this.sessions[userId]) return null;
+
+		const session = this.sessions[userId];
+		const endTime = new Date();
+		const duration = endTime - session.start;
+
+		// cleanup
+		delete this.sessions[userId];
+
+		return {
+			userId,
+			start: session.start.toISOString(),
+			end: endTime.toISOString(),
+			duration: formatDuration(duration),
+			timezone: Intl.DateTimeFormat().resolvedOptions().timezone
+		};
+	}
+
+	checkInactiveSession() {
+		const now = Date.now();
+		Object.keys(this.sessions).forEach(userId=>{
+			if(now - this.sessions[userId].lastActivity > this.INACTIVITY_TIMEOUT){
+				this.endSession(userId);
+			}
+		});
+	}
+
+}
+function formatDuration(ms) {
+		const secs = Math.floor(ms/1000);
+		return `${Math.floor(secs/60)}m ${secs%60}s`;
+	}
+
+
+// Usage
+const tracker = new SessionTracker();
+tracker.startSession('user123');
+setTimeout(()=>{
+	const report = tracker.endSession('user123');
+	console.log('session report:',report);
+}, 5000);
+
+
+
+// --------------------------
+// Travel: Flight Duration Calculator
+
+
+/*
+ * Calculate flight duration across timezones
+ * @param {string} departure - ISO string (e.g., "2023-12-25T09:00:00-05:00")
+ * @param {string} arrival - ISO String (e.g., "2023-12-25T16:30:00+01:00")
+ * */
+
+
+function calculateFlightDuration(departure, arrival) {
+	const depDate = new Date(departure);
+	const arrDate = new Date(arrival);
+
+	// handle same-day timezone crossing
+	if(arrDate < depDate) {
+		arrDate.setDate(arrDate.getDate() +1);
+	}
+
+	const durationMs = arrDate - depDate;
+	const hours = Math.floor(durationMs / (1000 * 60 * 60));
+	const minutes = Math.floor((durationMs % (1000* 60 * 60))/ (1000* 60));
+
+
+	return {
+		totalMinutes: Math.floor(durationMs / (1000 * 60)),
+		formatted: `${hours}h ${minutes}m`,
+		departureLocal: depDate.toLocaleTimeString(),
+		arrivalLocal: arrDate.toLocaleTimeString()
+	};
+}
+
+
+
+// Usage: JFK to LHR
+const duration = calculateFlightDuration(
+ "2023-12-25T09:00:00-05:00", // NYC 9AM EST
+  "2023-12-25T16:30:00+00:00"  // LHR 4:30PM GMT
+);
+
+console.log(`Flight Duration: ${duration.formatted}`);
