@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Function Binding</h1>
+
+    <h2>Function binding Example</h2>
+    <button id="bad-btn">Bad Binding</button>
+    <button id="good-btn">Good Binding</button>
+    <br />
+
+    <h2>API Service Binding</h2>
+    <pre>
+Scenario: An API service where methods need bound context for callbacks
+Problem: Class methods lose context when passed as callbacks
+Solution: Bind methods in constructor</pre
+    >
+
+    <button id="fetch-user-btn">Fetch User</button>
+    <button id="fetch-post-btn">Fetch Posts</button>
+    <p>
+      Key Benefit: Bound methods maintain context regardless of how they're
+      called.
+    </p>
+
+    <h2>Bound Price Calculator</h2>
+    <pre>
+Scenario: Create specialized discount functions from a general calculator
+Problem: Repetitive argument passing
+Solution: Use bind() for partial application</pre
+    >
+    <br />
+    <p>Check the price of an item including tax for NYC or Chicago.</p>
+
+    <input id="price" type="number" placeholder="Base Price" />
+    <button id="nyc-btn">Calculate NYC Price</button>
+    <button id="chi-btn">Calculate Chicago Price</button>
+    <p id="result"></p>
+    <p>
+      Real-world Use Case: E-commerce systems where you need multiple pricing
+      variations.
+    </p>
+
+    <h2>ServerLogger with Partial</h2>
+    <pre>
+Scenario: Pre-configure loggers with partial metadata
+Problem: Need to fix some arguments but keep dynamic this
+Solution: Custom partial function</pre
+    >
+
+    <p>Open your browser console to see the log outputs.</p>
+
+    <button id="error-btn">Log Error</button>
+    <button id="warning-btn">Log Warning</button>
+
+    <p>Advantage: Maintains this context while fixing some arguments.</p>
+
+    <h2>bind() vs Wrapper - Animation Frame</h2>
+    <pre>
+Scenario: Smooth animation using requestAnimationFrame
+Comparison: Two approaches to maintain context</pre
+    >
+
+    <div id="box">Animator</div>
+    <button id="start-bind">Start (bind)</button>
+    <button id="start-arrow">Start (arrow)</button>
+    <p>Open console to see logs while box moves -></p>
+
+    <p>
+      Performance Note: .bind() creates the function once, while arrow wrappers
+      create new functions each call.
+    </p>
+
+    <h2>ShoppingCart with bindAll</h2>
+    <pre>
+Scenario: Class with many methods needing binding
+Problem: Manual binding is tedious
+Solution: Automate with bindAll
+    </pre>
+
+    <button id="add-btn">Add Random Item</button>
+    <button id="checkout-btn">Checkout</button>
+    <div id="log"></div>
+
+    <p>
+      When to Use: In classes with many methods that get passed as callbacks.
+    </p>
+  </body>
+  <script src="10_function_binding.js"></script>
+</html>

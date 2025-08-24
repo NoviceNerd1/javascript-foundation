@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Arrow Function</title>
+  </head>
+  <body>
+    <h1>Arrow Function Revisit</h1>
+
+    <h2>"this" binding in Event Listeners</h2>
+    <pre>
+Problem: Regular functions in event listeners lose this context.
+Solution: Arrow functions inherit this from the surrounding scope.
+    </pre>
+
+    <p>Open console to see output.</p>
+
+    <button id="badButton">Broken Binding (function)</button>
+    <button id="goodButton">Fixed Binding (Arrow)</button>
+
+    <pre>
+        Why?
+	•	Regular functions in event listeners default this to the DOM element.
+	•	Arrow functions retain the class's this.
+    </pre>
+
+    <h2>Filter / Map / forEach with Arrow Functions(Cleaner Callbacks)</h2>
+    <pre>
+Problem: Verbose callback syntax in array methods.
+Solution: Arrow functions provide concise inline functions.
+    </pre>
+    <p>Open console to see logs. Click the button to run the code.</p>
+
+    <button id="runBtn">Run Arrow Function</button>
+
+    <h3>Results in UI:</h3>
+    <pre id="output"></pre>
+
+    <pre>
+        Why?
+	•	Reduces boilerplate for simple operations.
+	•	Improves readability in method chaining.
+    </pre>
+
+    <h2>Promises & Async/Await (Avoid Binding this)</h2>
+
+    <pre>
+Problem: this context is lost in promise chains.
+Solution: Arrow functions preserve this.
+    </pre>
+
+    <h3>Fixing "this" with Arrow Functions</h3>
+    <p>
+      Click the button to fetch data using both <b>wrong</b> and
+      <b>correct</b> approaches.
+    </p>
+    <p>
+      Using <b>DummyJSON API</b>: <code>https://dummyjson.com/users/1</code>
+    </p>
+
+    <button id="runDemo">Run Demo</button>
+
+    <h4>Output:</h4>
+    <pre id="fix_this_output"></pre>
+
+    <pre>
+Why?
+	•	Avoids const self = this or .bind(this) workarounds.
+	•	Cleaner async code.
+    </pre>
+  </body>
+  <script src="11_arrow_functions_revisit.js"></script>
+</html>
