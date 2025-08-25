@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JavaScript Objects Handbook</title>
+
+    <!-- Prism.js for syntax highlighting -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism-tomorrow.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/prismjs/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-javascript.min.js"></script>
+
+    <style>
+      body {
+        margin: 0;
+        font-family: system-ui, sans-serif;
+        background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+        color: #eee;
+        line-height: 1.6;
+      }
+
+      header {
+        text-align: center;
+        padding: 2rem 1rem;
+        background: rgba(0, 0, 0, 0.6);
+      }
+      header h1 {
+        margin: 0;
+        font-size: 2rem;
+      }
+      header p {
+        margin-top: 0.5rem;
+        font-size: 1rem;
+        color: #ccc;
+      }
+
+      nav {
+        text-align: center;
+        margin: 1rem;
+      }
+      nav button {
+        background: #4cafef;
+        border: none;
+        margin: 0.3rem;
+        padding: 0.6rem 1rem;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      nav button:hover {
+        background: #379cd6;
+      }
+
+      main {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 1.5rem;
+        padding: 1.5rem;
+      }
+
+      .card {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        padding: 1rem;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+      }
+      .card h2 {
+        font-size: 1.2rem;
+        margin-top: 0;
+        color: #4cafef;
+      }
+
+      pre {
+        background: #1e1e1e;
+        border-radius: 8px;
+        padding: 0.75rem;
+        overflow-x: auto;
+      }
+
+      /* Playground */
+      .playground {
+        margin-top: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .playground textarea {
+        width: 100%;
+        height: 120px;
+        padding: 0.5rem;
+        border-radius: 6px;
+        border: none;
+        font-family: monospace;
+        font-size: 0.9rem;
+        resize: vertical;
+      }
+      .playground button {
+        align-self: flex-start;
+        background: #4cafef;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      .playground pre {
+        background: #111;
+        min-height: 40px;
+      }
+
+      /* Dark/Light toggle */
+      .toggle {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        background: #4cafef;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      body.light {
+        background: #f4f4f4;
+        color: #222;
+      }
+      body.light header {
+        background: #ddd;
+      }
+      body.light .card {
+        background: #fff;
+        color: #222;
+      }
+      body.light pre {
+        background: #eee;
+        color: #000;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>JavaScript Objects Handbook</h1>
+      <p>
+        Interactive guide to mastering JS objects, methods, and OOP concepts
+      </p>
+    </header>
+
+    <nav>
+      <button onclick="scrollToSection('what-are-objects')">
+        What Are Objects
+      </button>
+      <button onclick="scrollToSection('properties-methods')">
+        Properties & Methods
+      </button>
+      <button onclick="scrollToSection('creating-objects')">
+        Creating Objects
+      </button>
+      <button onclick="scrollToSection('oop')">OOP Concepts</button>
+      <button onclick="scrollToSection('playground')">Playground</button>
+    </nav>
+
+    <main>
+      <section class="card" id="what-are-objects">
+        <h2>What Are Objects?</h2>
+        <p>Objects are key-value pairs that group related data and behavior.</p>
+        <pre><code class="language-js">const person = {
+  name: "Alice",
+  age: 25,
+  greet() {
+    return `Hi, I'm ${this.name}`;
+  }
+};
+
+console.log(person.greet()); // "Hi, I'm Alice"</code></pre>
+      </section>
+
+      <section class="card" id="properties-methods">
+        <h2>Properties & Methods</h2>
+        <p>Properties store values, methods are functions on objects.</p>
+        <pre><code class="language-js">const car = {
+  brand: "Tesla",
+  speed: 0,
+  accelerate(amount) {
+    this.speed += amount;
+    return this.speed;
+  }
+};
+
+car.accelerate(50); // 50</code></pre>
+      </section>
+
+      <section class="card" id="creating-objects">
+        <h2>Creating Objects</h2>
+        <h3>Constructor Function</h3>
+        <pre><code class="language-js">function Book(title, author) {
+  this.title = title;
+  this.author = author;
+}
+const b = new Book("1984", "Orwell");</code></pre>
+
+        <h3>ES6 Class</h3>
+        <pre><code class="language-js">class Animal {
+  constructor(name) { this.name = name; }
+  speak() { return `${this.name} makes a noise`; }
+}
+const dog = new Animal("Rex");
+dog.speak(); // "Rex makes a noise"</code></pre>
+      </section>
+
+      <section class="card" id="oop">
+        <h2>OOP Concepts</h2>
+        <h3>Encapsulation</h3>
+        <pre><code class="language-js">class BankAccount {
+  #balance = 0; // private field
+  deposit(amount) { this.#balance += amount; }
+  getBalance() { return this.#balance; }
+}</code></pre>
+
+        <h3>Inheritance</h3>
+        <pre><code class="language-js">class Dog extends Animal {
+  speak() { return `${this.name} barks`; }
+}</code></pre>
+
+        <h3>Polymorphism</h3>
+        <pre><code class="language-js">function makeItSpeak(animal) {
+  console.log(animal.speak());
+}
+makeItSpeak(new Dog("Buddy"));
+makeItSpeak(new Animal("Creature"));</code></pre>
+      </section>
+
+      <section class="card" id="playground">
+        <h2>Interactive Playground</h2>
+        <p>Type and run JavaScript here:</p>
+        <div class="playground">
+          <textarea id="editor">console.log("Hello JS Objects!")</textarea>
+          <button onclick="runCode()">Run ▶</button>
+          <pre id="output"></pre>
+        </div>
+      </section>
+    </main>
+
+    <button class="toggle" onclick="toggleMode()">Toggle Theme</button>
+
+    <script>
+      function scrollToSection(id) {
+        document.getElementById(id).scrollIntoView({ behavior: "smooth" });
+      }
+      function runCode() {
+        const code = document.getElementById("editor").value;
+        const output = document.getElementById("output");
+        try {
+          const result = eval(code);
+          output.textContent =
+            result !== undefined ? result : "✅ Code executed";
+        } catch (err) {
+          output.textContent = "❌ " + err;
+        }
+      }
+      function toggleMode() {
+        document.body.classList.toggle("light");
+      }
+    </script>
+  </body>
+</html>

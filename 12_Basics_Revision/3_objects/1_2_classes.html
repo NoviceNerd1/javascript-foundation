@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JavaScript Classes - Real World Examples</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f5f8fa;
+        color: #333;
+      }
+      h1 {
+        color: #2c3e50;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+      }
+      h2 {
+        color: #2980b9;
+        margin-top: 30px;
+      }
+      .example {
+        background-color: white;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 20px 0;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      code {
+        background-color: #f8f9fa;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: "Consolas", monospace;
+      }
+      pre {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 6px;
+        overflow-x: auto;
+        border-left: 4px solid #3498db;
+      }
+      .output {
+        background-color: #2c3e50;
+        color: white;
+        padding: 15px;
+        border-radius: 6px;
+        margin-top: 15px;
+        font-family: "Consolas", monospace;
+      }
+      button {
+        background-color: #3498db;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin: 5px;
+        transition: background-color 0.3s;
+      }
+      button:hover {
+        background-color: #2980b9;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>JavaScript Classes - Real World Examples</h1>
+
+    <div class="example">
+      <h2>1. E-commerce Product Class</h2>
+      <p>
+        A class to represent products in an online store with methods for price
+        calculations.
+      </p>
+      <pre>
+class Product {
+    constructor(id, name, price, description, category) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.description = description;
+        this.category = category;
+        this.inStock = true;
+        this.reviews = [];
+    }
+    
+    // Method to apply discount
+    applyDiscount(percent) {
+        if (percent < 0 || percent > 100) {
+            throw new Error('Discount percentage must be between 0 and 100');
+        }
+        const discountAmount = this.price * (percent / 100);
+        this.price = parseFloat((this.price - discountAmount).toFixed(2));
+        return this;
+    }
+    
+    // Method to add a review
+    addReview(user, rating, comment) {
+        if (rating < 1 || rating > 5) {
+            throw new Error('Rating must be between 1 and 5 stars');
+        }
+        
+        this.reviews.push({
+            user,
+            rating,
+            comment,
+            date: new Date().toISOString()
+        });
+        
+        return this;
+    }
+    
+    // Method to calculate average rating
+    getAverageRating() {
+        if (this.reviews.length === 0) return 0;
+        
+        const total = this.reviews.reduce((sum, review) => sum + review.rating, 0);
+        return parseFloat((total / this.reviews.length).toFixed(1));
+    }
+    
+    // Method to toggle stock status
+    toggleStockStatus() {
+        this.inStock = !this.inStock;
+        return this;
+    }
+    
+    // Getter for product summary
+    get summary() {
+        return `${this.name} - $${this.price} (${this.inStock ? 'In Stock' : 'Out of Stock'})`;
+    }
+}
+
+// Usage example
+const laptop = new Product(101, 'Gaming Laptop', 1299.99, 'High-performance gaming laptop', 'Electronics');
+laptop.applyDiscount(15)
+     .addReview('JohnDoe', 5, 'Excellent performance!')
+     .addReview('JaneSmith', 4, 'Good but battery life could be better');
+
+console.log(laptop.summary);
+console.log(`Average rating: ${laptop.getAverageRating()}`);
+        </pre
+      >
+      <button onclick="runProductExample()">Run Product Example</button>
+      <div id="productOutput" class="output"></div>
+    </div>
+
+    <div class="example">
+      <h2>2. User Authentication Class</h2>
+      <p>A class to handle user registration, login, and authentication.</p>
+      <pre>
+class AuthSystem {
+    constructor() {
+        this.users = new Map(); // Using Map to store users by email
+        this.loggedInUser = null;
+    }
+    
+    // Method to register a new user
+    register(email, password, userData) {
+        if (this.users.has(email)) {
+            throw new Error('User with this email already exists');
+        }
+        
+        if (password.length < 6) {
+            throw new Error('Password must be at least 6 characters long');
+        }
+        
+        // In a real application, we would hash the password
+        const user = {
+            email,
+            password, // In real apps, never store plain text passwords!
+            ...userData,
+            createdAt: new Date(),
+            isActive: true
+        };
+        
+        this.users.set(email, user);
+        return user;
+    }
+    
+    // Method to login a user
+    login(email, password) {
+        const user = this.users.get(email);
+        
+        if (!user || !user.isActive) {
+            throw new Error('User not found or account is inactive');
+        }
+        
+        if (user.password !== password) {
+            throw new Error('Invalid password');
+        }
+        
+        user.lastLogin = new Date();
+        this.loggedInUser = user;
+        
+        return user;
+    }
+    
+    // Method to logout
+    logout() {
+        this.loggedInUser = null;
+        return true;
+    }
+    
+    // Method to change password
+    changePassword(oldPassword, newPassword) {
+        if (!this.loggedInUser) {
+            throw new Error('No user is currently logged in');
+        }
+        
+        if (this.loggedInUser.password !== oldPassword) {
+            throw new Error('Old password is incorrect');
+        }
+        
+        if (newPassword.length < 6) {
+            throw new Error('New password must be at least 6 characters long');
+        }
+        
+        this.loggedInUser.password = newPassword;
+        return true;
+    }
+    
+    // Method to deactivate account
+    deactivateAccount() {
+        if (!this.loggedInUser) {
+            throw new Error('No user is currently logged in');
+        }
+        
+        this.loggedInUser.isActive = false;
+        this.logout();
+        return true;
+    }
+    
+    // Getter to check if a user is logged in
+    get isAuthenticated() {
+        return this.loggedInUser !== null;
+    }
+}
+
+// Usage example
+const auth = new AuthSystem();
+auth.register('test@example.com', 'password123', { name: 'John Doe', age: 30 });
+auth.login('test@example.com', 'password123');
+
+console.log(`User is authenticated: ${auth.isAuthenticated}`);
+console.log(`Logged in user: ${auth.loggedInUser.name}`);
+        </pre
+      >
+      <button onclick="runAuthExample()">Run Auth Example</button>
+      <div id="authOutput" class="output"></div>
+    </div>
+
+    <div class="example">
+      <h2>3. Shopping Cart Class</h2>
+      <p>
+        A class to manage a shopping cart with items, quantities, and totals.
+      </p>
+      <pre>
+class ShoppingCart {
+    constructor() {
+        this.items = [];
+        this.discountCode = null;
+        this.taxRate = 0.08; // 8% tax
+    }
+    
+    // Method to add item to cart
+    addItem(product, quantity = 1) {
+        if (quantity <= 0) {
+            throw new Error('Quantity must be greater than 0');
+        }
+        
+        const existingItemIndex = this.items.findIndex(item => item.product.id === product.id);
+        
+        if (existingItemIndex !== -1) {
+            // Item already in cart, update quantity
+            this.items[existingItemIndex].quantity += quantity;
+        } else {
+            // Add new item to cart
+            this.items.push({
+                product,
+                quantity,
+                addedAt: new Date()
+            });
+        }
+        
+        return this;
+    }
+    
+    // Method to remove item from cart
+    removeItem(productId, quantity = null) {
+        const itemIndex = this.items.findIndex(item => item.product.id === productId);
+        
+        if (itemIndex === -1) {
+            throw new Error('Item not found in cart');
+        }
+        
+        if (quantity === null || quantity >= this.items[itemIndex].quantity) {
+            // Remove the item completely
+            this.items.splice(itemIndex, 1);
+        } else {
+            // Reduce the quantity
+            this.items[itemIndex].quantity -= quantity;
+        }
+        
+        return this;
+    }
+    
+    // Method to apply discount code
+    applyDiscount(code) {
+        // In a real application, we would validate the code against a database
+        this.discountCode = code;
+        return this;
+    }
+    
+    // Method to calculate subtotal (before tax and discounts)
+    calculateSubtotal() {
+        return this.items.reduce((total, item) => {
+            return total + (item.product.price * item.quantity);
+        }, 0);
+    }
+    
+    // Method to calculate discount amount
+    calculateDiscount() {
+        if (!this.discountCode) return 0;
+        
+        // Simple discount logic - in real apps, this would be more complex
+        const subtotal = this.calculateSubtotal();
+        
+        if (this.discountCode === 'SAVE10') {
+            return subtotal * 0.1; // 10% discount
+        } else if (this.discountCode === 'SAVE20') {
+            return subtotal * 0.2; // 20% discount
+        }
+        
+        return 0;
+    }
+    
+    // Method to calculate tax
+    calculateTax() {
+        const subtotal = this.calculateSubtotal();
+        const discount = this.calculateDiscount();
+        return (subtotal - discount) * this.taxRate;
+    }
+    
+    // Method to calculate total
+    calculateTotal() {
+        const subtotal = this.calculateSubtotal();
+        const discount = this.calculateDiscount();
+        const tax = this.calculateTax();
+        
+        return subtotal - discount + tax;
+    }
+    
+    // Method to clear cart
+    clearCart() {
+        this.items = [];
+        this.discountCode = null;
+        return this;
+    }
+    
+    // Getter for cart item count
+    get itemCount() {
+        return this.items.reduce((count, item) => count + item.quantity, 0);
+    }
+    
+    // Method to display cart summary
+    getSummary() {
+        return {
+            itemCount: this.itemCount,
+            subtotal: this.calculateSubtotal(),
+            discount: this.calculateDiscount(),
+            tax: this.calculateTax(),
+            total: this.calculateTotal(),
+            items: this.items
+        };
+    }
+}
+
+// Usage example
+const cart = new ShoppingCart();
+const product1 = new Product(1, 'JavaScript Book', 29.99, 'Learn JavaScript programming', 'Books');
+const product2 = new Product(2, 'Wireless Mouse', 19.99, 'Ergonomic wireless mouse', 'Electronics');
+
+cart.addItem(product1, 2)
+    .addItem(product2, 1)
+    .applyDiscount('SAVE10');
+
+const summary = cart.getSummary();
+console.log(`Cart total: $${summary.total.toFixed(2)}`);
+console.log(`Items in cart: ${summary.itemCount}`);
+        </pre
+      >
+      <button onclick="runCartExample()">Run Cart Example</button>
+      <div id="cartOutput" class="output"></div>
+    </div>
+
+    <div class="example">
+      <h2>4. Blog Post Class with Inheritance</h2>
+      <p>
+        Demonstrating class inheritance with a base ContentItem class and
+        specialized BlogPost class.
+      </p>
+      <pre>
+// Base class for content items
+class ContentItem {
+    constructor(title, content, author) {
+        this.title = title;
+        this.content = content;
+        this.author = author;
+        this.createdAt = new Date();
+        this.updatedAt = new Date();
+        this.likes = 0;
+        this.comments = [];
+    }
+    
+    // Method to update content
+    updateContent(newContent) {
+        this.content = newContent;
+        this.updatedAt = new Date();
+        return this;
+    }
+    
+    // Method to add a like
+    addLike() {
+        this.likes++;
+        return this;
+    }
+    
+    // Method to add a comment
+    addComment(user, comment) {
+        this.comments.push({
+            user,
+            comment,
+            date: new Date()
+        });
+        return this;
+    }
+    
+    // Method to get preview text
+    getPreview(length = 100) {
+        return this.content.substring(0, length) + (this.content.length > length ? '...' : '');
+    }
+    
+    // Getter for time since creation
+    get timeSinceCreation() {
+        const now = new Date();
+        const diffInSeconds = Math.floor((now - this.createdAt) / 1000);
+        
+        if (diffInSeconds < 60) return `${diffInSeconds} seconds ago`;
+        if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} minutes ago`;
+        if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hours ago`;
+        
+        return `${Math.floor(diffInSeconds / 86400)} days ago`;
+    }
+}
+
+// BlogPost class extending ContentItem
+class BlogPost extends ContentItem {
+    constructor(title, content, author, categories = []) {
+        super(title, content, author); // Call parent constructor
+        this.categories = categories;
+        this.isPublished = false;
+        this.views = 0;
+    }
+    
+    // Method to publish the post
+    publish() {
+        this.isPublished = true;
+        this.publishedAt = new Date();
+        return this;
+    }
+    
+    // Method to unpublish the post
+    unpublish() {
+        this.isPublished = false;
+        return this;
+    }
+    
+    // Method to add a view
+    addView() {
+        if (this.isPublished) {
+            this.views++;
+        }
+        return this;
+    }
+    
+    // Method to add categories
+    addCategories(...newCategories) {
+        newCategories.forEach(category => {
+            if (!this.categories.includes(category)) {
+                this.categories.push(category);
+            }
+        });
+        return this;
+    }
+    
+    // Override getPreview method to include categories
+    getPreview(length = 100) {
+        const basePreview = super.getPreview(length);
+        return `${basePreview} [Categories: ${this.categories.join(', ')}]`;
+    }
+}
+
+// Usage example
+const blogPost = new BlogPost(
+    'Introduction to JavaScript Classes',
+    'JavaScript classes provide a much cleaner and more structured way to create objects and deal with inheritance compared to the traditional prototype-based approach. In this article, we will explore how to use classes effectively in modern JavaScript applications.',
+    'Jane Smith',
+    ['JavaScript', 'Programming', 'Web Development']
+);
+
+blogPost.publish()
+        .addView()
+        .addView()
+        .addLike()
+        .addComment('JohnDoe', 'Great article! Very helpful.');
+
+console.log(blogPost.title);
+console.log(blogPost.getPreview(50));
+console.log(`Views: ${blogPost.views}, Likes: ${blogPost.likes}`);
+console.log(`Published: ${blogPost.timeSinceCreation}`);
+        </pre
+      >
+      <button onclick="runBlogExample()">Run Blog Example</button>
+      <div id="blogOutput" class="output"></div>
+    </div>
+
+    <script>
+      // Define the Product class
+      class Product {
+        constructor(id, name, price, description, category) {
+          this.id = id;
+          this.name = name;
+          this.price = price;
+          this.description = description;
+          this.category = category;
+          this.inStock = true;
+          this.reviews = [];
+        }
+
+        applyDiscount(percent) {
+          if (percent < 0 || percent > 100) {
+            throw new Error("Discount percentage must be between 0 and 100");
+          }
+          const discountAmount = this.price * (percent / 100);
+          this.price = parseFloat((this.price - discountAmount).toFixed(2));
+          return this;
+        }
+
+        addReview(user, rating, comment) {
+          if (rating < 1 || rating > 5) {
+            throw new Error("Rating must be between 1 and 5 stars");
+          }
+
+          this.reviews.push({
+            user,
+            rating,
+            comment,
+            date: new Date().toISOString(),
+          });
+
+          return this;
+        }
+
+        getAverageRating() {
+          if (this.reviews.length === 0) return 0;
+
+          const total = this.reviews.reduce(
+            (sum, review) => sum + review.rating,
+            0
+          );
+          return parseFloat((total / this.reviews.length).toFixed(1));
+        }
+
+        toggleStockStatus() {
+          this.inStock = !this.inStock;
+          return this;
+        }
+
+        get summary() {
+          return `${this.name} - $${this.price} (${
+            this.inStock ? "In Stock" : "Out of Stock"
+          })`;
+        }
+      }
+
+      // Define the AuthSystem class
+      class AuthSystem {
+        constructor() {
+          this.users = new Map();
+          this.loggedInUser = null;
+        }
+
+        register(email, password, userData) {
+          if (this.users.has(email)) {
+            throw new Error("User with this email already exists");
+          }
+
+          if (password.length < 6) {
+            throw new Error("Password must be at least 6 characters long");
+          }
+
+          const user = {
+            email,
+            password,
+            ...userData,
+            createdAt: new Date(),
+            isActive: true,
+          };
+
+          this.users.set(email, user);
+          return user;
+        }
+
+        login(email, password) {
+          const user = this.users.get(email);
+
+          if (!user || !user.isActive) {
+            throw new Error("User not found or account is inactive");
+          }
+
+          if (user.password !== password) {
+            throw new Error("Invalid password");
+          }
+
+          user.lastLogin = new Date();
+          this.loggedInUser = user;
+
+          return user;
+        }
+
+        logout() {
+          this.loggedInUser = null;
+          return true;
+        }
+
+        changePassword(oldPassword, newPassword) {
+          if (!this.loggedInUser) {
+            throw new Error("No user is currently logged in");
+          }
+
+          if (this.loggedInUser.password !== oldPassword) {
+            throw new Error("Old password is incorrect");
+          }
+
+          if (newPassword.length < 6) {
+            throw new Error("New password must be at least 6 characters long");
+          }
+
+          this.loggedInUser.password = newPassword;
+          return true;
+        }
+
+        deactivateAccount() {
+          if (!this.loggedInUser) {
+            throw new Error("No user is currently logged in");
+          }
+
+          this.loggedInUser.isActive = false;
+          this.logout();
+          return true;
+        }
+
+        get isAuthenticated() {
+          return this.loggedInUser !== null;
+        }
+      }
+
+      // Define the ShoppingCart class
+      class ShoppingCart {
+        constructor() {
+          this.items = [];
+          this.discountCode = null;
+          this.taxRate = 0.08;
+        }
+
+        addItem(product, quantity = 1) {
+          if (quantity <= 0) {
+            throw new Error("Quantity must be greater than 0");
+          }
+
+          const existingItemIndex = this.items.findIndex(
+            (item) => item.product.id === product.id
+          );
+
+          if (existingItemIndex !== -1) {
+            this.items[existingItemIndex].quantity += quantity;
+          } else {
+            this.items.push({
+              product,
+              quantity,
+              addedAt: new Date(),
+            });
+          }
+
+          return this;
+        }
+
+        removeItem(productId, quantity = null) {
+          const itemIndex = this.items.findIndex(
+            (item) => item.product.id === productId
+          );
+
+          if (itemIndex === -1) {
+            throw new Error("Item not found in cart");
+          }
+
+          if (quantity === null || quantity >= this.items[itemIndex].quantity) {
+            this.items.splice(itemIndex, 1);
+          } else {
+            this.items[itemIndex].quantity -= quantity;
+          }
+
+          return this;
+        }
+
+        applyDiscount(code) {
+          this.discountCode = code;
+          return this;
+        }
+
+        calculateSubtotal() {
+          return this.items.reduce((total, item) => {
+            return total + item.product.price * item.quantity;
+          }, 0);
+        }
+
+        calculateDiscount() {
+          if (!this.discountCode) return 0;
+
+          const subtotal = this.calculateSubtotal();
+
+          if (this.discountCode === "SAVE10") {
+            return subtotal * 0.1;
+          } else if (this.discountCode === "SAVE20") {
+            return subtotal * 0.2;
+          }
+
+          return 0;
+        }
+
+        calculateTax() {
+          const subtotal = this.calculateSubtotal();
+          const discount = this.calculateDiscount();
+          return (subtotal - discount) * this.taxRate;
+        }
+
+        calculateTotal() {
+          const subtotal = this.calculateSubtotal();
+          const discount = this.calculateDiscount();
+          const tax = this.calculateTax();
+
+          return subtotal - discount + tax;
+        }
+
+        clearCart() {
+          this.items = [];
+          this.discountCode = null;
+          return this;
+        }
+
+        get itemCount() {
+          return this.items.reduce((count, item) => count + item.quantity, 0);
+        }
+
+        getSummary() {
+          return {
+            itemCount: this.itemCount,
+            subtotal: this.calculateSubtotal(),
+            discount: this.calculateDiscount(),
+            tax: this.calculateTax(),
+            total: this.calculateTotal(),
+            items: this.items,
+          };
+        }
+      }
+
+      // Define the ContentItem and BlogPost classes
+      class ContentItem {
+        constructor(title, content, author) {
+          this.title = title;
+          this.content = content;
+          this.author = author;
+          this.createdAt = new Date();
+          this.updatedAt = new Date();
+          this.likes = 0;
+          this.comments = [];
+        }
+
+        updateContent(newContent) {
+          this.content = newContent;
+          this.updatedAt = new Date();
+          return this;
+        }
+
+        addLike() {
+          this.likes++;
+          return this;
+        }
+
+        addComment(user, comment) {
+          this.comments.push({
+            user,
+            comment,
+            date: new Date(),
+          });
+          return this;
+        }
+
+        getPreview(length = 100) {
+          return (
+            this.content.substring(0, length) +
+            (this.content.length > length ? "..." : "")
+          );
+        }
+
+        get timeSinceCreation() {
+          const now = new Date();
+          const diffInSeconds = Math.floor((now - this.createdAt) / 1000);
+
+          if (diffInSeconds < 60) return `${diffInSeconds} seconds ago`;
+          if (diffInSeconds < 3600)
+            return `${Math.floor(diffInSeconds / 60)} minutes ago`;
+          if (diffInSeconds < 86400)
+            return `${Math.floor(diffInSeconds / 3600)} hours ago`;
+
+          return `${Math.floor(diffInSeconds / 86400)} days ago`;
+        }
+      }
+
+      class BlogPost extends ContentItem {
+        constructor(title, content, author, categories = []) {
+          super(title, content, author);
+          this.categories = categories;
+          this.isPublished = false;
+          this.views = 0;
+        }
+
+        publish() {
+          this.isPublished = true;
+          this.publishedAt = new Date();
+          return this;
+        }
+
+        unpublish() {
+          this.isPublished = false;
+          return this;
+        }
+
+        addView() {
+          if (this.isPublished) {
+            this.views++;
+          }
+          return this;
+        }
+
+        addCategories(...newCategories) {
+          newCategories.forEach((category) => {
+            if (!this.categories.includes(category)) {
+              this.categories.push(category);
+            }
+          });
+          return this;
+        }
+
+        getPreview(length = 100) {
+          const basePreview = super.getPreview(length);
+          return `${basePreview} [Categories: ${this.categories.join(", ")}]`;
+        }
+      }
+
+      // Example runner functions
+      function runProductExample() {
+        const output = document.getElementById("productOutput");
+        output.innerHTML = "";
+
+        try {
+          const laptop = new Product(
+            101,
+            "Gaming Laptop",
+            1299.99,
+            "High-performance gaming laptop",
+            "Electronics"
+          );
+          laptop
+            .applyDiscount(15)
+            .addReview("JohnDoe", 5, "Excellent performance!")
+            .addReview("JaneSmith", 4, "Good but battery life could be better");
+
+          output.innerHTML += `<div>${laptop.summary}</div>`;
+          output.innerHTML += `<div>Average rating: ${laptop.getAverageRating()}</div>`;
+          output.innerHTML += `<div>Reviews: ${laptop.reviews.length}</div>`;
+        } catch (error) {
+          output.innerHTML += `<div style="color: #e74c3c;">Error: ${error.message}</div>`;
+        }
+      }
+
+      function runAuthExample() {
+        const output = document.getElementById("authOutput");
+        output.innerHTML = "";
+
+        try {
+          const auth = new AuthSystem();
+          auth.register("test@example.com", "password123", {
+            name: "John Doe",
+            age: 30,
+          });
+          auth.login("test@example.com", "password123");
+
+          output.innerHTML += `<div>User is authenticated: ${auth.isAuthenticated}</div>`;
+          output.innerHTML += `<div>Logged in user: ${auth.loggedInUser.name}</div>`;
+          output.innerHTML += `<div>User email: ${auth.loggedInUser.email}</div>`;
+        } catch (error) {
+          output.innerHTML += `<div style="color: #e74c3c;">Error: ${error.message}</div>`;
+        }
+      }
+
+      function runCartExample() {
+        const output = document.getElementById("cartOutput");
+        output.innerHTML = "";
+
+        try {
+          const cart = new ShoppingCart();
+          const product1 = new Product(
+            1,
+            "JavaScript Book",
+            29.99,
+            "Learn JavaScript programming",
+            "Books"
+          );
+          const product2 = new Product(
+            2,
+            "Wireless Mouse",
+            19.99,
+            "Ergonomic wireless mouse",
+            "Electronics"
+          );
+
+          cart
+            .addItem(product1, 2)
+            .addItem(product2, 1)
+            .applyDiscount("SAVE10");
+
+          const summary = cart.getSummary();
+
+          output.innerHTML += `<div>Items in cart: ${summary.itemCount}</div>`;
+          output.innerHTML += `<div>Subtotal: $${summary.subtotal.toFixed(
+            2
+          )}</div>`;
+          output.innerHTML += `<div>Discount: $${summary.discount.toFixed(
+            2
+          )}</div>`;
+          output.innerHTML += `<div>Tax: $${summary.tax.toFixed(2)}</div>`;
+          output.innerHTML += `<div>Total: $${summary.total.toFixed(2)}</div>`;
+        } catch (error) {
+          output.innerHTML += `<div style="color: #e74c3c;">Error: ${error.message}</div>`;
+        }
+      }
+
+      function runBlogExample() {
+        const output = document.getElementById("blogOutput");
+        output.innerHTML = "";
+
+        try {
+          const blogPost = new BlogPost(
+            "Introduction to JavaScript Classes",
+            "JavaScript classes provide a much cleaner and more structured way to create objects and deal with inheritance compared to the traditional prototype-based approach. In this article, we will explore how to use classes effectively in modern JavaScript applications.",
+            "Jane Smith",
+            ["JavaScript", "Programming", "Web Development"]
+          );
+
+          blogPost
+            .publish()
+            .addView()
+            .addView()
+            .addLike()
+            .addComment("JohnDoe", "Great article! Very helpful.");
+
+          output.innerHTML += `<div>Title: ${blogPost.title}</div>`;
+          output.innerHTML += `<div>Preview: ${blogPost.getPreview(50)}</div>`;
+          output.innerHTML += `<div>Views: ${blogPost.views}, Likes: ${blogPost.likes}</div>`;
+          output.innerHTML += `<div>Published: ${blogPost.timeSinceCreation}</div>`;
+          output.innerHTML += `<div>Categories: ${blogPost.categories.join(
+            ", "
+          )}</div>`;
+        } catch (error) {
+          output.innerHTML += `<div style="color: #e74c3c;">Error: ${error.message}</div>`;
+        }
+      }
+    </script>
+  </body>
+</html>
